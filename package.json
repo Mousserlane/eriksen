@@ -1,0 +1,21 @@
+{
+  "name": "eriksen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/eriksenCLI.js",
+  "bin": {
+    "eriksen": "bin/eriksen"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "deployer",
+    "cli"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^2.4.2"
+  }
+}
