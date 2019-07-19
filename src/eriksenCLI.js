@@ -16,7 +16,6 @@ function parseArguments(rawArgs) {
       [args]: true
     });
   });
-  console.log(parsedArgs);
   return Object.keys(parsedArgs);
 }
 
