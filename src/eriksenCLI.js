@@ -1,10 +1,10 @@
 const chalk = require('chalk');
 const os = require('os');
 const { spawn } = require('child_process');
-const readline = require('readline').createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+const readline = require('readline').createInterface(
+  process.stdin,
+  process.stdout
+);
 
 function parseArguments(rawArgs) {
   let parsedArgs = {};
@@ -21,9 +21,19 @@ function parseArguments(rawArgs) {
 }
 
 function pushTag() {
-  // do something
+  // TODO push tag feature
 }
-function eriksenCLI(args) {
+
+function getCommitMessage(promptMessage) {
+  return new Promise(resolve => {
+    readline.question(promptMessage, cm => {
+      readline.close();
+      resolve(cm);
+    });
+  });
+}
+
+async function eriksenCLI(args) {
   const parsedArgs = parseArguments(args);
   const releaseType = parsedArgs[0];
   const versionString = parsedArgs[1];
@@ -31,13 +41,8 @@ function eriksenCLI(args) {
   let commitMessage = '';
   let concatedString = '';
 
-  readline.setPrompt('Enter commit message:');
-  readline.prompt();
-
-  readline.on('line', cm => {
-    commitMessage = cm;
-    readline.close();
-  });
+  const cm = await getCommitMessage('Enter commit message: \n');
+  commitMessage = cm;
 
   switch (releaseType) {
     case '--beta' || '-b':
@@ -57,7 +62,7 @@ function eriksenCLI(args) {
   const gitProcess = spawn('git', [
     'tag',
     '-a',
-    versionString,
+    concatedString,
     '-m',
     commitMessage
   ]);
