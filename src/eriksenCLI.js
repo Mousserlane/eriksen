@@ -19,9 +19,22 @@ function parseArguments(rawArgs) {
   return Object.keys(parsedArgs);
 }
 
-function pushTag() {
-  // TODO push tag feature
-}
+// function pushTag(version) {
+//   return new Promise((resolve, reject) => {
+//     const push = spawn('git', ['push', 'origin', version]);
+//     console.log('Pushing tag to origin...');
+//     push.stdout.on('data', data => {
+//       console.log(chalk.blue('Tag successfully passed'));
+//       resolve(200);
+//     });
+//     push.stderr.on('data', err => {
+//       reject(err);
+//     });
+//     push.on('close', code => {
+//       console.log(chalk.white(`tag pushed`));
+//     });
+//   });
+// }
 
 function getCommitMessage(promptMessage) {
   return new Promise(resolve => {
@@ -58,20 +71,26 @@ async function eriksenCLI(args) {
       break;
   }
 
-  const gitProcess = spawn('git', [
-    'tag',
-    '-a',
-    concatedString,
-    '-m',
-    commitMessage
-  ]);
+  //   const gitProcess = spawn('git', [
+  //     'tag',
+  //     '-a',
+  //     concatedString,
+  //     '-m',
+  //     commitMessage
+  //   ]);
+
+  const gitProcess = spawn(
+    `git tag -a ${concatedString} -m '${commitMessage}' &&
+  git push origin ${concatedString}`,
+    { shell: true }
+  );
 
   gitProcess.stdout.on('data', data => {
     console.log(chalk.blue(`creating tag: ${data}`));
   });
 
-  gitProcess.stderr.on('data', data => {
-    console.log(chalk.red(`Error while creating your tag: ${data}`));
+  gitProcess.stderr.on('data', err => {
+    console.log(chalk.red(`Error while creating your tag: ${err}`));
     gitProcess.kill('SIGKILL');
   });
 

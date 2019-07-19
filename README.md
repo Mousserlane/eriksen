@@ -11,3 +11,5 @@ Eriksen is a git tag assistant that automatically create an annotated git tag fo
 - [ ] Automatically push tag to remote origin
 
 - [ ] Allow user to define their own annotation
+
+- [ ] Add Usage
