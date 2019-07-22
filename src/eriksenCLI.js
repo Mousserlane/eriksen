@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 const os = require('os');
-const { spawn } = require('child_process');
+const { exec } = require('child_process');
 const readline = require('readline').createInterface(
   process.stdin,
   process.stdout
@@ -79,24 +79,34 @@ async function eriksenCLI(args) {
   //     commitMessage
   //   ]);
 
-  const gitProcess = spawn(
+  const gitProcess = exec(
     `git tag -a ${concatedString} -m '${commitMessage}' &&
   git push origin ${concatedString}`,
-    { shell: true }
+    (error, stdout, stderr) => {
+      if (error) {
+        console.log(chalk.red(`An error occured: ${error}`));
+      } else {
+        console.log(
+          chalk.blue(
+            `Process completed, tag ${concatedString} has been successfully created and pushed`
+          )
+        );
+      }
+    }
   );
 
-  gitProcess.stdout.on('data', data => {
-    console.log(chalk.blue(`creating tag: ${data}`));
-  });
+  // gitProcess.stdout.on('data', data => {
+  //   console.log(chalk.blue(`creating tag: ${data}`));
+  // });
 
-  gitProcess.stderr.on('data', err => {
-    console.log(chalk.red(`Error while creating your tag: ${err}`));
-    gitProcess.kill('SIGKILL');
-  });
+  // gitProcess.stderr.on('data', err => {
+  //   console.log(chalk.red(`Error while creating your tag: ${err}`));
+  //   gitProcess.kill('SIGKILL');
+  // });
 
-  gitProcess.on('close', code => {
-    console.log(chalk.white(`process exited with code: ${code}`));
-  });
+  // gitProcess.on('close', code => {
+  //   console.log(chalk.white(`process exited with code: ${code}`));
+  // });
   //   console.log(chalk.white('arguments', parsedArgs));
 }
 
