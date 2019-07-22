@@ -12,4 +12,4 @@ Eriksen is a git tag assistant that automatically create an annotated git tag fo
 
 - [ ] Allow user to define their own annotation
 
-- [ ] Add Usage
+- [x] Add Usage Guide

@@ -36,6 +36,24 @@ function parseArguments(rawArgs) {
 //   });
 // }
 
+function usage() {
+  console.log(chalk.white(`
+    eriksen is a git tag assistant that automatically create an annotated git tag for your releases.
+    
+    usage:
+      eriksen ${chalk.green("<release-flag>")}
+
+
+    release flags can be:
+
+
+    --beta:           used to create a tag with ${chalk.green("_beta")} suffix
+    --stable:         used to create a tag with ${chalk.green("_stable")} suffix
+    --production:     used to create a tag with ${chalk.green("_production")} suffix
+    --help:           used to print the guide
+  `))
+}
+
 function getCommitMessage(promptMessage) {
   return new Promise(resolve => {
     readline.question(promptMessage, cm => {
@@ -53,9 +71,6 @@ async function eriksenCLI(args) {
   let commitMessage = '';
   let concatedString = '';
 
-  const cm = await getCommitMessage('Enter commit message: \n');
-  commitMessage = cm;
-
   switch (releaseType) {
     case '--beta' || '-b':
       concatedString = `${versionString}_beta`;
@@ -66,10 +81,17 @@ async function eriksenCLI(args) {
     case '--production' || '-p':
       concatedString = `${versionString}_production`;
       break;
+    case 'help':
+      return usage();
+      // break;
     default:
-      console.log('argument not found');
-      break;
+      console.log(chalk.red('argument not found!'));
+      return usage();
+      // break;
   }
+  
+  const cm = await getCommitMessage('Enter commit message: \n');
+  commitMessage = cm;
 
   //   const gitProcess = spawn('git', [
   //     'tag',
